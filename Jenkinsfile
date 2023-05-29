@@ -22,8 +22,7 @@ pipeline {
             when { expression { true } }
             steps {
                 container('git'){
-                    git url: 'https://github.com/naresh9919/spring-petclinic.git'
-                    branch: 'main'
+                    git branch: 'main', changelog: false, poll: false, url: 'https://github.com/naresh9919/spring-petclinic.git'
                 }
             }
             post{
