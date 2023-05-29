@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "petclinic-chart.fullname" . }}
   labels:
-    {{- include "petclinic-chart.labels" . | nindent 4 }}
+    {{ include "petclinic-chart.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
