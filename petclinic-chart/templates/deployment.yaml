@@ -1,7 +1,7 @@
 apiVersion:apps/v1
 kind:Deployment
 metadata:
-  name: {{ include "petclinic-chart.fullname" . }}
+ name: {{ include "petclinic-chart.fullname" . }}
   labels:
     {{ include "petclinic-chart.labels" . | nindent 4 }}
 spec:
