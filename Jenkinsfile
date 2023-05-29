@@ -8,9 +8,9 @@ pipeline {
     environment {
         NEXUS_VERSION = "nexus3"
         NEXUS_PROTOCOL = "http"
-        NEXUS_URL = "IP:PORT"
-        NEXUS_REPOSITORY = "maven-hosted"
-        NEXUS_CREDENTIAL_ID = "CREDS-ID"
+        NEXUS_URL = "3.110.49.37:8081"
+        NEXUS_REPOSITORY = "maven-nexus-repo"
+        NEXUS_CREDENTIAL_ID = "Nexus-cred"
         DOCKERHUB_USERNAME = "USERNAME"
         APP_NAME = "spring-petclinic"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
@@ -22,7 +22,7 @@ pipeline {
             when { expression { true } }
             steps {
                 container('git'){
-                    git url:
+                    git url: 'https://github.com/naresh9919/spring-petclinic.git'
                     branch: 'main'
                 }
             }
