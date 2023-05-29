@@ -5,29 +5,29 @@ metadata:
   labels:
     {{ include "petclinic-chart.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
+  {{ if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  {{ end }}
   selector:
     matchLabels:
-      {{- include "petclinic-chart.selectorLabels" . | nindent 6 }}
+      {{ include "petclinic-chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{ with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{ toYaml . | nindent 8 }}
+      {{ end }}
       labels:
-        {{- include "petclinic-chart.selectorLabels" . | nindent 8 }}
+        {{ include "petclinic-chart.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
+      {{ with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{ toYaml . | nindent 8 }}
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{ toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
