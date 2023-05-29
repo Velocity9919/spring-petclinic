@@ -1,36 +1,33 @@
-apiVersion:apps/v1
-kind:Deployment
+apiVersion: apps/v1
+kind: Deployment
 metadata:
- name: {{ include "petclinic-chart.fullname" . }}
+  name: petclinc
   labels:
-    {{ include "petclinic-chart.labels" . | nindent 4 }}
+    app: petclinc
 spec:
-  {{ if not .Values.autoscaling.enabled }}
- replicas: {{ .Values.replicaCount }}
-  {{ end }}
- selector:
-   matchLabels:
-      {{ include "petclinic-chart.selectorLabels" . | nindent 6 }}
- template:
-   metadata:
-      {{ with .Values.podAnnotations }}
-      annotations:
-        {{ toYaml . | nindent 8 }}
-      {{ end }}
+  replicas: 3
+  selector:
+    matchLabels:
+      app: petclinc
+  template:
+    metadata:
       labels:
-        {{ include "petclinic-chart.selectorLabels" . | nindent 8 }}
-   spec:
-      {{ with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{ toYaml . | nindent 8 }}
-      {{ end }}
+        app: petclinc
+    spec:
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{ toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: petclinc
+          image: petclinc:latest
           ports:
-            - name: http
-              containerPort: 8080
-              protocol: TCP
+            - containerPort: 8080
+          env:
+            - name: ENV_VARIABLE_1
+              value: value1
+            - name: ENV_VARIABLE_2
+              value: value2
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "0.5"
+              memory: "512Mi"
