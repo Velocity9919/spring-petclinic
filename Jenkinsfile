@@ -1,80 +1,50 @@
 pipeline {
-    agent any
-    tools { 
-        maven 'M3' 
+    agent any 
+    tools{
+        jdk 'jdk11'
+        maven 'maven3'
     }
-    options {
-        buildDiscarder logRotator( 
-            daysToKeepStr: '2', 
-            numToKeepStr: '2'
-        )
-    }
+
     environment {
-        DOCKERHUB_USERNAME = "kunchalavikram"
-        JOB_NAME = "spring-petclinic"
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "IP:PORT"
+        NEXUS_REPOSITORY = "maven-hosted"
+        NEXUS_CREDENTIAL_ID = "CREDS-ID"
+        DOCKERHUB_USERNAME = "USERNAME"
         APP_NAME = "spring-petclinic"
-        IMAGE_TAG = "${BUILD_NUMBER}"
         IMAGE_NAME = "${DOCKERHUB_USERNAME}" + "/" + "${APP_NAME}"
-        REGISTRY_CREDS = 'dockerhub'
+        IMAGE_TAG = "${BUILD_NUMBER}"
     }
+
     stages {
-        stage('Cleanup Workspace') {
+        stage('Checkout SCM'){
+            when { expression { true } }
             steps {
-                script {
-                    cleanWs()
-                    sh """
-                    echo "Cleaned Up Workspace for ${JOB_NAME}"
-                    """
+                container('git'){
+                    git url:
+                    branch: 'main'
+                }
+            }
+            post{
+                success {
+                    sendStatus("Git Checkout","success")
                 }
             }
         }
-        stage('Checkout SCM'){
+        stage('Build SW'){
+            when { expression { true } }
             steps {
-                git url: 'https://github.com/kunchalavikram1427/spring-petclinic.git',
-                branch: 'main'
-            }
-        }
-        stage('Code Build') {
-            steps {
-                 sh "mvn -Dmaven.test.failure.ignore=true clean package"
+                container('maven'){
+                    sh 'mvn -Dmaven.test.failure.ignore=true clean package'
+                }
             }
             post {
-                success {
+                success{
                     junit '**/target/surefire-reports/*.xml'
+                    sendStatus("SW Build","success")
                 }
             }
         }
-        stage('Build Docker Image'){
-            steps {
-                script{
-                    docker_image = docker.build "${IMAGE_NAME}"
-                }
-            }
-        }
-        stage('Push Docker Image'){
-            steps {
-                script{
-                    docker.withRegistry('', REGISTRY_CREDS ){
-                        docker_image.push("${BUILD_NUMBER}")
-                        docker_image.push('latest')
-                    }
-                }
-            }
-        }
-        stage('Run Docker Image'){
-            steps {
-                sh "docker rm -f petclinic || true"
-                sh "docker run -d -p 8181:8080 --name petclinic ${IMAGE_NAME}:${IMAGE_TAG}"
-            }
-        }  
-        stage('Delete Docker Images'){
-            when {
-                expression { false }
-            }
-            steps {
-                sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
-                sh "docker rmi ${IMAGE_NAME}:latest"
-            }
-        }
-    }   
+    }
 }
