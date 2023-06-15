@@ -1,0 +1,19 @@
+---
+- hosts : all
+become : true
+
+tasks :
+- name : create docker image using war file
+  command : docker build -t spring-petclinic:latest .
+  args :
+   chdir : /opt/docker
+
+- name : create tag to image
+  command : docker tag spring-petclinic nareshbabu1991/spring-petclinic
+
+- name : push image on to dockerhub
+  command : docker push nareshbabu1991/spring-petclinic
+
+- name : remove docker images from ansible server
+  command : docker rmi spring-petclinic:latest nareshbabu1991/spring-petclinic
+  ignore_errors : yes
