@@ -1,15 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "petclinic-chart.fullname" . }}
+  name: spring-petclinic-service
   labels:
-    {{- include "petclinic-chart.labels" . | nindent 4 }}
+   {{- include "spring-petclinic.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+  - name: http
+    port: 8080
+    targetPort: 8080
   selector:
-    {{- include "petclinic-chart.selectorLabels" . | nindent 4 }}
+    app: spring-petclinic
+  type: NodePort
