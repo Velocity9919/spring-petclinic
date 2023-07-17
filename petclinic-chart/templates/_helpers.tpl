@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "petclinic-chart.name" -}}
+{{- define "spring-petclinic.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "petclinic-chart.fullname" -}}
+{{- define "spring-petclinic.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "petclinic-chart.chart" -}}
+{{- define "spring-petclinic.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "petclinic-chart.labels" -}}
-helm.sh/chart: {{ include "petclinic-chart.chart" . }}
-{{ include "petclinic-chart.selectorLabels" . }}
+{{- define "spring-petclinic.labels" -}}
+helm.sh/chart: {{ include "spring-petclinic.chart" . }}
+{{ include "spring-petclinic.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "petclinic-chart.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "petclinic-chart.name" . }}
+{{- define "spring-petclinic.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "spring-petclinic.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "petclinic-chart.serviceAccountName" -}}
+{{- define "spring-petclinic.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "petclinic-chart.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "spring-petclinic.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
