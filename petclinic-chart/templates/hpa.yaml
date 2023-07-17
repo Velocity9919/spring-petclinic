@@ -1,15 +1,32 @@
-{{- if .Values.hpa.enabled -}}
-apiVersion: autoscaling/v1
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  annotations:
-    {{- include "spring-petclinic.labels" . | nindent 4 }}
+  name: {{ include "petclinic-chart.fullname" . }}
+  labels:
+    {{- include "petclinic-chart.labels" . | nindent 4 }}
 spec:
-  maxReplicas: {{ .Values.hpa.maxreplicas }}
-  minReplicas: {{ .Values.hpa.minrplicas }}
   scaleTargetRef:
-    apiVersion: extensions/v1
+    apiVersion: apps/v1
     kind: Deployment
-    name: spring-petclinic
-  targetCPUUtilizationPercentage: {{ .Values.hpa.cuputi }}
-{{- end -}}
+    name: {{ include "petclinic-chart.fullname" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
