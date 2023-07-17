@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spring-petclinic
+  name: spring-petclinic-dep
   labels:
    {{- include "spring-petclinic.labels" . | nindent 4 }}
 spec:
