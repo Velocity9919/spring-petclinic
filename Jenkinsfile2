@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     withKubeConfig([credentialsId: 'k8s']){
-                        sh '/var/lib/jenkins/kubectl apply -f ./petclinic-chart/values-prod.yaml'
+                        sh 'helm upgrade first --install petclinic-chart --namespace helm-deployment --set image.tag=$BUILD_NUMBER'
                     }
                 }
             }
