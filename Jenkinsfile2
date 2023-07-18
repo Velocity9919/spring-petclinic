@@ -43,7 +43,7 @@ pipeline {
             steps {
                 script {
                     withKubeConfig([credentialsId: 'k8s']){
-                        sh '/var/lib/jenkins/kubectl apply -f petclinic-chart/values-prod.yaml --validate=false'
+                        sh '/var/lib/jenkins/kubectl apply -f ./petclinic-chart/values-prod.yaml'
                     }
                 }
             }
