@@ -19,8 +19,8 @@
   tasks:
     - name: copying ...
       copy:
-        src: /var/lib/jenkins/workspace/petclinic/target/spring-petclinic-2.1.0.BUILD-SNAPSHOT.jar
-        dest: /home/ubuntu/snapshot.jar
+        src: /var/lib/jenkins/workspace/Jenkins-ansible-docker/target/spring-petclinic-1.24.war
+        dest: /home/ubuntu/opt/docker
 
 - name: Run petclinic
   hosts: webserver
