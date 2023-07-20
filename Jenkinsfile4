@@ -1,20 +1,21 @@
 pipeline {
     agent any
-    stages {
-        stage ('Compile Stage') {
 
+    tools {
+        jdk 'jdk11'
+        maven 'maven3'
+    }
+
+    stages {
+        stage ('checkout SCM'){
             steps {
-                withMaven(maven : 'maven') {
-                    sh 'mvn clean compile'
-                }
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/naresh9919/spring-petclinic.git'
             }
         }
-        
-        stage ('Build') {
+
+        stage ('maven Build'){
             steps {
-                withMaven(maven : 'maven') {
-                    sh 'mvn package'
-                }
+                sh 'mvn clean install'
             }
         }
     }
