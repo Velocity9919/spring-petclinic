@@ -19,9 +19,11 @@ pipeline {
             }
         }
 
-     stage ('deploy playbook'){
+        stage ('deploy playbook'){
             steps {
-                sh 'ansiblePlaybook credentialsId: 'ansible-cred', installation: 'ansible', inventory: 'hosts', playbook: 'ansibleplaybook.yaml''
+                script{
+                    sh 'ansiblePlaybook credentialsId: 'ansible-cred', installation: 'ansible', inventory: 'hosts', playbook: 'ansibleplaybook.yaml''
+                }
             }
         }
     }
