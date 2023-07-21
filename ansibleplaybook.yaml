@@ -1,0 +1,26 @@
+---
+- name: build and deploy docker container
+  hosts: webservers
+  gather_facts: false
+  remote_user: root
+  tasks:
+  - name: copy the files to remote server
+    become: true
+    copy:
+      src: sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/jenkins-ansible-docker/target/.war"
+      dest: /opt/docker
+
+  - name: building docker image
+    docker_image: 
+      name: petclinic:latest
+      build:
+        path: /opt/docker
+        state: present
+
+  - name: create a container
+    docker_container:
+      name: petclinic
+      image: petclinic/latest
+      ports:
+        - "80:80"
+      state: started
