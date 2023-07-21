@@ -18,11 +18,5 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        
-        stage ('Deploy') {
-            steps {
-                sh 'ansible-playbook main.yml -i hosts'
-            }
-        }
     }
 }
