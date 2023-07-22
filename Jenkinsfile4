@@ -21,9 +21,7 @@ pipeline {
 
         stage ('deploy playbook'){
             steps {
-                script{
-                    sh 'ansiblePlaybook credentialsId: 'ansible-cred', installation: 'ansible', inventory: 'hosts', playbook: 'ansibleplaybook.yaml''
-                }
+                ansiblePlaybook credentialsId: 'ansible-cred', installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'ansibleplaybook.yaml'
             }
         }
     }
